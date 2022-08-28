@@ -1,0 +1,72 @@
+<div>
+  <h1>{{ album.name }}</h1>
+  <p>Full track listing for {{ album.name }}</p>
+  <br />
+  Click the &nbsp;<mat-icon mat-list-icon>queue_music</mat-icon>&nbsp; icon to
+  <b>add</b> a song from your favourites list
+
+  <br />
+</div>
+
+<mat-card>
+  <mat-card-content fxLayout="row wrap" fxLayout.xs="column">
+    <div fxflex>
+      <img
+        [src]="album.images[1].url"
+        alt="album cover"
+        [style.margin]="'10px'"
+        [style.max-width]="'90%'"
+      />
+    </div>
+    <div fxFlex>
+      <div
+        [style.min-width]="'300px'"
+        [style.margin]="'10px'"
+        ng-controller="datCtrl"
+      >
+        <strong>Record Label: </strong> {{ album.label }}<br />
+        <strong>Release Date: </strong>
+        {{ album.release_date | date: "M/dd/yy" }}<br /><br />
+        <strong>Tracks:</strong> {{ album.total_tracks }}<br />
+        <strong>Popularity: </strong>{{ album.popularity }}<br /><br />
+
+        <mat-chip-list
+          *ngFor="let artist of album.artists"
+          aria-label="Artist selection"
+        >
+          <a [routerLink]="['/artist', artist.id]">
+            <mat-chip>{{ artist.name }}</mat-chip>
+          </a>
+        </mat-chip-list>
+        <br />
+
+        <div *ngFor="let copyright of album.copyrights">
+          {{ copyright.text }}
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+<br /><br />
+<h2>Track Listing</h2>
+
+<mat-list>
+  <!-- Single "Responsive" Material List Item-->
+  <mat-list-item *ngFor="let item of album.tracks.items">
+    <mat-icon mat-list-icon (click)="addToFavourites(item.id)"
+      >queue_music</mat-icon
+    >
+    <div mat-line>
+      <mat-card>
+        <mat-card-content>
+          {{ item.track_number }}: {{ item.name }} -
+          {{ (item.duration_ms / 60000).toFixed(2) }}
+          <div *ngIf="item.preview_url">
+            <br /><audio controls [src]="item.preview_url"></audio>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-list-item>
+  <!-- -->
+</mat-list>
